@@ -62,6 +62,8 @@
 #include <linux/ptrace.h>
 #include <linux/freezer.h>
 
+#include <linux/freezer.h>
+
 #include <asm/futex.h>
 
 #include "rtmutex_common.h"
