@@ -23,9 +23,9 @@ export ARM_EABI_TOOLCHAIN=../../../prebuilts/gcc/linux-x86/arm/arm-eabi-4.8-sm;
 export PATH=$PATH:$ARM_EABI_TOOLCHAIN/bin:$ARM_EABI_TOOLCHAIN/arm-eabi/bin;
 
 # Build ID
-export LOCALVERSION="-OMP-V4"
-export KBUILD_BUILD_USER=OMP
-export KBUILD_BUILD_HOST="OMP"
+export LOCALVERSION="-MVK"
+export KBUILD_BUILD_USER=
+export KBUILD_BUILD_HOST="Maximum-Velocity-Kernel"
 
 # Cross compile with arm
 export ARCH=arm;
@@ -42,7 +42,7 @@ then
 fi;
 
 make hammerhead_defconfig;
-time make -j8;
+time make -j16;
 
 if [ -e ./arch/arm/boot/zImage-dtb ] ;
 then
