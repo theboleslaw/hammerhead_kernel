@@ -23,8 +23,8 @@ export ARM_EABI_TOOLCHAIN=../../../prebuilts/gcc/linux-x86/arm/arm-eabi-4.8-lina
 export PATH=$PATH:$ARM_EABI_TOOLCHAIN/bin:$ARM_EABI_TOOLCHAIN/arm-eabi/bin;
 
 # Build ID
-export LOCALVERSION="-MVK"
-export KBUILD_BUILD_USER=
+export LOCALVERSION=""
+export KBUILD_BUILD_USER=MVK
 export KBUILD_BUILD_HOST="Maximum-Velocity-Kernel"
 
 # Cross compile with arm
