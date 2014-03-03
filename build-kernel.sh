@@ -19,13 +19,13 @@ export USE_CCACHE=1
 
 # Target gcc version
 export TARGET_GCC=4.8;
-export ARM_EABI_TOOLCHAIN=../../../prebuilts/gcc/linux-x86/arm/arm-eabi-4.8-linaro;
+export ARM_EABI_TOOLCHAIN=../../../prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.8-linaro;
 export PATH=$PATH:$ARM_EABI_TOOLCHAIN/bin:$ARM_EABI_TOOLCHAIN/arm-eabi/bin;
 
 # Build ID
 export LOCALVERSION=""
 export KBUILD_BUILD_USER=MVK
-export KBUILD_BUILD_HOST="OMP"
+export KBUILD_BUILD_HOST="MVK"
 
 # Cross compile with arm
 export ARCH=arm;
