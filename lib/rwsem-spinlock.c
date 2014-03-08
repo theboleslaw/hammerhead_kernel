@@ -9,12 +9,15 @@
 #include <linux/sched.h>
 #include <linux/export.h>
 
+enum rwsem_waiter_type {
+	RWSEM_WAITING_FOR_WRITE,
+	RWSEM_WAITING_FOR_READ
+};
+
 struct rwsem_waiter {
 	struct list_head list;
 	struct task_struct *task;
-	unsigned int flags;
-#define RWSEM_WAITING_FOR_READ	0x00000001
-#define RWSEM_WAITING_FOR_WRITE	0x00000002
+	enum rwsem_waiter_type type;
 };
 
 int rwsem_is_locked(struct rw_semaphore *sem)
@@ -67,33 +70,17 @@ __rwsem_do_wake(struct rw_semaphore *sem, int wakewrite)
 
 	waiter = list_entry(sem->wait_list.next, struct rwsem_waiter, list);
 
-	if (!wakewrite) {
-		if (waiter->flags & RWSEM_WAITING_FOR_WRITE)
-			goto out;
-		goto dont_wake_writers;
-	}
-
-	/* if we are allowed to wake writers try to grant a single write lock
-	 * if there's a writer at the front of the queue
-	 * - we leave the 'waiting count' incremented to signify potential
-	 *   contention
-	 */
-	if (waiter->flags & RWSEM_WAITING_FOR_WRITE) {
-		sem->activity = -1;
-		list_del(&waiter->list);
-		tsk = waiter->task;
-		/* Don't touch waiter after ->task has been NULLed */
-		smp_mb();
-		waiter->task = NULL;
-		wake_up_process(tsk);
-		put_task_struct(tsk);
+	if (waiter->type == RWSEM_WAITING_FOR_WRITE) {
+		if (wakewrite)
+			/* Wake up a writer. Note that we do not grant it the
+			 * lock - it will have to acquire it when it runs. */
+			wake_up_process(waiter->task);
 		goto out;
 	}
 
 	/* grant an infinite number of read locks to the front of the queue */
- dont_wake_writers:
 	woken = 0;
-	while (waiter->flags & RWSEM_WAITING_FOR_READ) {
+	do {
 		struct list_head *next = waiter->list.next;
 
 		list_del(&waiter->list);
@@ -103,10 +90,10 @@ __rwsem_do_wake(struct rw_semaphore *sem, int wakewrite)
 		wake_up_process(tsk);
 		put_task_struct(tsk);
 		woken++;
-		if (list_empty(&sem->wait_list))
+		if (next == &sem->wait_list)
 			break;
 		waiter = list_entry(next, struct rwsem_waiter, list);
-	}
+	} while (waiter->type != RWSEM_WAITING_FOR_WRITE);
 
 	sem->activity += woken;
 
@@ -159,7 +146,7 @@ void __sched __down_read(struct rw_semaphore *sem)
 
 	/* set up my own style of waitqueue */
 	waiter.task = tsk;
-	waiter.flags = RWSEM_WAITING_FOR_READ;
+	waiter.type = RWSEM_WAITING_FOR_READ;
 	get_task_struct(tsk);
 
 	list_add_tail(&waiter.list, &sem->wait_list);
@@ -226,9 +213,7 @@ void __sched __down_write_nested(struct rw_semaphore *sem, int subclass)
 
 	/* set up my own style of waitqueue */
 	waiter.task = tsk;
-	waiter.flags = RWSEM_WAITING_FOR_WRITE;
-	get_task_struct(tsk);
-
+	waiter.type = RWSEM_WAITING_FOR_WRITE;
 	list_add_tail(&waiter.list, &sem->wait_list);
 
 	/* we don't need to touch the semaphore struct anymore */
