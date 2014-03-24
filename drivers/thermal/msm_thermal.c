@@ -38,7 +38,7 @@
 
 #define POLLING_DELAY 100
 
-unsigned int temp_threshold = 60;
+unsigned int temp_threshold = 75;
 module_param(temp_threshold, int, 0755);
 
 static int enabled;
