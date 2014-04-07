@@ -10,7 +10,6 @@ NAME = Saber-toothed Squirrel
 # Comments in this file are targeted only to the developer, do not
 # expect to learn how to build the kernel reading this file.
 
-# Do not:
 # o  use make's built-in rules and variables
 #    (this increases performance and avoids hard-to-debug behaviour);
 # o  print "Entering directory ...";
@@ -382,10 +381,12 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
 		   -fno-delete-null-pointer-checks \
-		   -ftree-vectorize \
-	           -mno-unaligned-access \
-	       	   $(KERNEL_MODS)
- 
+		   -funswitch-loops -fpredictive-commoning -fgcse-after-reload \
+		   -Wno-sizeof-pointer-memaccess \
+                   -fmodulo-sched -fmodulo-sched-allow-regmoves \
+		   -mfpu=neon-vfpv4 -mtune=cortex-a15 -mcpu=cortex-a15 -fgraphite -floop-parallelize-all \
+		   -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block
+
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
 KBUILD_AFLAGS   := -D__ASSEMBLY__
