@@ -350,7 +350,7 @@ CC		= $(srctree)/scripts/gcc-wrapper.py $(REAL_CC)
 
 CHECKFLAGS := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 -Wbitwise -Wno-return-void $(CF)
-KERNELFLAGS	= -mcpu=cortex-a8 -mcpu=cortex-a15 -mtune=cortex-a15 -mfpu=neon-vfpv4 -funsafe-math-optimizations -ftree-vectorize -fgraphite -fpredictive-commoning -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -fgcse-las
+KERNELFLAGS	= -marm -mcpu=cortex-a8 -mcpu=cortex-a15 -mtune=cortex-a15 -mfpu=neon-vfpv4 -mvectorize-with-neon-quad -funsafe-math-optimizations -ftree-vectorize -fgraphite -fpredictive-commoning -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -fgcse-las
 MODFLAGS	= -DMODULE $(KERNELFLAGS)
 CFLAGS_MODULE = $(MODFLAGS)
 AFLAGS_MODULE = $(MODFLAGS)
@@ -374,7 +374,7 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
 		   -fno-delete-null-pointer-checks -mno-unaligned-access \
-                   -mcpu=cortex-a8 -mtune=cortex-a15 -mfpu=neon-vfpv4 \
+                   -mcpu=cortex-a8 -mcpu=cortex-a15 -mtune=cortex-a15 -mfpu=neon-vfpv4 -mvectorize-with-neon-quad \
                    -funsafe-math-optimizations -ftree-vectorize \
 		   -fgraphite -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -funsafe-math-optimizations -ftree-vectorize
 
