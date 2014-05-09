@@ -350,7 +350,7 @@ CC		= $(srctree)/scripts/gcc-wrapper.py $(REAL_CC)
 
 CHECKFLAGS := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 -Wbitwise -Wno-return-void $(CF)
-KERNELFLAGS	= -munaligned-access -fgcse-sm -Ofast -fsingle-precision-constant -fforce-addr -fsched-spec-load -mtune=cortex-a15 -mcpu=cortex-a15 -marm -mfpu=neon-vfpv4 -mvectorize-with-neon-quad -funroll-loops
+KERNELFLAGS	= -munaligned-access -fgcse-sm -Ofast -fsingle-precision-constant -fforce-addr -fsched-spec-load -mtune=cortex-a15 -mcpu=cortex-a15 -marm -mfpu=neon -mvectorize-with-neon-quad -funroll-loops
 MODFLAGS	= -DMODULE $(KERNELFLAGS)
 CFLAGS_MODULE = $(MODFLAGS)
 AFLAGS_MODULE = $(MODFLAGS)
